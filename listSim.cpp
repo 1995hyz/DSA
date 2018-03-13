@@ -1,6 +1,8 @@
 #include <iostream>
-#include <string>
+#include <cstdlib>
 #include <cstdio>
+#include <cstring>
+#include <errno.h>
 
 template <typename Object>
 class simpleList
@@ -104,8 +106,13 @@ class queue: public simpleList<Object>
 };
 
 char testName[16]="aQueue\0";
-int main(){
-	int a=1;
+char* linepointer=NULL;
+int readSize=0;
+size_t len=0;
+FILE* commandFile;
+
+int main(int argc,char* argv[]){
+	/*int a=1;
 	int b=2;
 	int c=3;
 	stack<int> simStack=stack<int>();
@@ -122,6 +129,26 @@ int main(){
 	simStack.push(b);
 	simStack.pop();
 	simStack.pop();
-	simStack.pop();
-	return 1;
+	simStack.pop();*/
+	std::cerr<<"Enter name of input file: ";
+	while(!readSize){
+		if((readSize=(int)getline(&linepointer,&len,stdin))<0){
+			std::cerr<<"Reading Input Error: "<<strerror(errno)<<std::endl;
+			return EXIT_FAILURE;
+		}
+	}
+	linepointer[readSize-1]=0;		//Truncate the \n that getline() gets
+	readSize=0;
+	if((commandFile=fopen(linepointer,"r"))==NULL){
+		std::cerr<<"Reading Input File Error: "<<strerror(errno)<<std::endl;
+		return EXIT_FAILURE;
+	}
+	while((readSize=(int)getline(&linepointer,&len,commandFile))>0){
+		std::cerr<<linepointer;
+	}
+	if((readSize<0)&&(errno!=0)){
+		std::cerr<<"Read Command File Error: "<<strerror(errno)<<std::endl;
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
 }
