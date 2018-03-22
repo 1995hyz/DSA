@@ -1,9 +1,12 @@
 #include <iostream>
 #include <cstdlib>
 #include <cstdio>
-#include <cstring>
+#include <string>
 #include <errno.h>
+#include <fstream>
+#include <string.h>
 
+using namespace std;
 template <typename Object>
 class simpleList
 {
@@ -20,10 +23,10 @@ class simpleList
 		simpleList(){
 			theSize=0;
 		}
-		char* getName(){
+		string getName(){
 			return listName;
 		}
-		void setName(char* name){
+		void setName(string name){
 			listName=name;
 		}	
 	protected:
@@ -48,19 +51,19 @@ class simpleList
 			if(theSize>0){
 				Node *temp=head;
 				head=head->nextNode;
-				std::cerr<<"Value popped: "<<temp->dataField<<std::endl;
+				//cerr<<"Value popped: "<<temp->dataField<<endl;
 				delete temp;
 				theSize--;
 			}
 			else{	
-				std::cerr<<"ERROR: This list is empty!"<<std::endl;
+				cerr<<"ERROR: This list is empty!"<<endl;
 			}
 		}	
 	protected:
 		int theSize;
 		Node *head;
 		Node *tail;
-		char *listName;
+		string listName;
 };
 
 template <typename Object>
@@ -101,54 +104,38 @@ class queue: public simpleList<Object>
 			}
 		}
 		Object pop(){
+			Object returnValue=simpleList<Object>::head->dataField;
 			simpleList<Object>::removeFromStart();
+			return returnValue;
 		}
 };
 
-char testName[16]="aQueue\0";
-char* linepointer=NULL;
-int readSize=0;
-size_t len=0;
-FILE* commandFile;
+std::string linepointer;
 
 int main(int argc,char* argv[]){
-	/*int a=1;
-	int b=2;
-	int c=3;
-	stack<int> simStack=stack<int>();
-	simStack.setName(testName);
-	simStack.push(a);
-	printf("Execute from %s\n ",simStack.getName());
-	simStack.push(b);
-	simStack.push(c);
-	simStack.pop();
-	simStack.pop();
-	simStack.pop();
-	simStack.pop();
-	simStack.push(a);
-	simStack.push(b);
-	simStack.pop();
-	simStack.pop();
-	simStack.pop();*/
-	std::cerr<<"Enter name of input file: ";
-	while(!readSize){
-		if((readSize=(int)getline(&linepointer,&len,stdin))<0){
-			std::cerr<<"Reading Input Error: "<<strerror(errno)<<std::endl;
-			return EXIT_FAILURE;
+
+	cerr<<"Enter name of input file: ";
+	getline(std::cin,linepointer);
+	ifstream commandFile;
+	const char *inputFile=linepointer.c_str();
+	char *token=NULL;
+	commandFile.open(inputFile,ios::in);
+	while(getline(commandFile,linepointer)){
+		cerr<<linepointer<<endl;
+		char* wholeCommand=strdup(linepointer.c_str());
+		queue<string> lineCommand=queue<string>();
+		token=strtok(wholeCommand," ");
+		while(token!=NULL){
+			lineCommand.push(string(token));
+			//cerr<<token<<endl;
+			token=strtok(NULL," ");
 		}
-	}
-	linepointer[readSize-1]=0;		//Truncate the \n that getline() gets
-	readSize=0;
-	if((commandFile=fopen(linepointer,"r"))==NULL){
-		std::cerr<<"Reading Input File Error: "<<strerror(errno)<<std::endl;
-		return EXIT_FAILURE;
-	}
-	while((readSize=(int)getline(&linepointer,&len,commandFile))>0){
-		std::cerr<<linepointer;
-	}
-	if((readSize<0)&&(errno!=0)){
-		std::cerr<<"Read Command File Error: "<<strerror(errno)<<std::endl;
-		return EXIT_FAILURE;
+		string popValue=lineCommand.pop();
+		cerr<<popValue<<endl;
+		if(popValue.compare("create")==0){
+			cerr<<"Got It"<<endl;
+		}
+		free(wholeCommand);	
 	}
 	return EXIT_SUCCESS;
 }
