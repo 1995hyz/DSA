@@ -28,7 +28,13 @@ class simpleList
 		}
 		void setName(string name){
 			listName=name;
-		}	
+		}
+		int getTheSize(){
+			return theSize;
+		}
+		void setTheSize(int size){
+			theSize=size;
+		}
 	protected:
 		void create(Object i){
 			Node* firstNode=new Node(i,NULL);
@@ -58,7 +64,7 @@ class simpleList
 			else{	
 				cerr<<"ERROR: This list is empty!"<<endl;
 			}
-		}	
+		}
 	protected:
 		int theSize;
 		Node *head;
@@ -112,6 +118,21 @@ class queue: public simpleList<Object>
 
 std::string linepointer;
 
+int checkName(queue<string>& nameLi,string theName){
+	int nameListSize=nameLi.getTheSize();
+	string checkName;
+	while(nameListSize>0){
+		checkName=nameLi.pop();
+		if((theName.compare(checkName)==0)){
+			nameLi.push(theName);
+			return 1;		
+		}
+		nameListSize=nameListSize-1;
+		nameLi.push(theName);
+	}
+	return 0;				
+}
+
 int main(int argc,char* argv[]){
 
 	cerr<<"Enter name of input file: ";
@@ -119,6 +140,10 @@ int main(int argc,char* argv[]){
 	ifstream commandFile;
 	const char *inputFile=linepointer.c_str();
 	char *token=NULL;
+	queue<string> nameList=queue<string>();		//Create a queue to hold the name of all current queue and stack
+	list<simpleList<int> *> listSLi;
+	list<simpleList<double> *> listSLd;
+	list<simpleList<string> *> listSLs;
 	commandFile.open(inputFile,ios::in);
 	while(getline(commandFile,linepointer)){
 		cerr<<linepointer<<endl;
@@ -127,13 +152,20 @@ int main(int argc,char* argv[]){
 		token=strtok(wholeCommand," ");
 		while(token!=NULL){
 			lineCommand.push(string(token));
-			//cerr<<token<<endl;
 			token=strtok(NULL," ");
 		}
-		string popValue=lineCommand.pop();
-		cerr<<popValue<<endl;
-		if(popValue.compare("create")==0){
+		string popValue1=lineCommand.pop();
+		cerr<<popValue1<<endl;
+		if(popValue1.compare("create")==0){
 			cerr<<"Got It"<<endl;
+			string popValue2=lineCommand.pop();
+			cerr<<popValue2<<endl;
+			if(checkName(nameList,popValue2)==0){
+				nameList.push(popValue2);
+			}
+			else{
+				cerr<<"ERROR: This name already exists!"<<endl;
+			}	
 		}
 		free(wholeCommand);	
 	}
