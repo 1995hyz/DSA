@@ -2,11 +2,13 @@
 #include <cstdlib>
 #include <cstdio>
 #include <string>
+#include <list>
 #include <errno.h>
 #include <fstream>
 #include <string.h>
 
 using namespace std;
+
 template <typename Object>
 class simpleList
 {
@@ -57,13 +59,18 @@ class simpleList
 			if(theSize>0){
 				Node *temp=head;
 				head=head->nextNode;
-				//cerr<<"Value popped: "<<temp->dataField<<endl;
+				cerr<<"Value popped: "<<temp->dataField;
 				delete temp;
 				theSize--;
+				cerr<<" Size: "<<theSize<<endl;
 			}
 			else{	
 				cerr<<"ERROR: This list is empty!"<<endl;
 			}
+		}
+		virtual void push(Object i){
+		}
+		virtual Object pop(){
 		}
 	protected:
 		int theSize;
@@ -110,31 +117,65 @@ class queue: public simpleList<Object>
 			}
 		}
 		Object pop(){
-			Object returnValue=simpleList<Object>::head->dataField;
+			Object returnValue;
+			if(simpleList<Object>::theSize>0){
+				returnValue=simpleList<Object>::head->dataField;
+			}
 			simpleList<Object>::removeFromStart();
 			return returnValue;
 		}
 };
 
+template <typename Object>
+void checkAndPush(queue<string> *lastTwoCommand, list<simpleList<Object>* > *toEachList){
+	string popValue2=lastTwoCommand->pop();
+	string popValue3=lastTwoCommand->pop();
+	typename list<simpleList<Object>* >::iterator it;
+	for(it=toEachList->begin();it!=toEachList->end();it++){
+		if(popValue2.compare(it->listName)==0){
+			stringstream converting(popValue3);
+			Object x;
+			converting>>x;
+			it->push(x);
+		}
+	}
+}
+
+template <typename Object>
+void createNewList(string listName, string listType, list<simpleList<Object>* > *toEachList){
+	if(listType.compare("stack")==0){
+		simpleList<Object> *pSLType=new stack<Object>();
+		pSLType->setName(listName);
+		toEachList->push_front(pSLType);
+	}
+	else if(listType.compare("queue")==0){
+		simpleList<Object> *pSLType=new queue<Object>();
+		pSLType->setName(listName);
+		toEachList->push_front(pSLType);
+	}
+}	
+
 std::string linepointer;
 
-int checkName(queue<string>& nameLi,string theName){
-	int nameListSize=nameLi.getTheSize();
+int checkName(queue<string> *nameLi,string theName){
+	int nameListSize=nameLi->getTheSize();
 	string checkName;
 	while(nameListSize>0){
-		checkName=nameLi.pop();
+		checkName=nameLi->pop();
+		//cerr<<"Comparing Name: "<<checkName<<endl;
 		if((theName.compare(checkName)==0)){
-			nameLi.push(theName);
+			nameLi->push(checkName);
 			return 1;		
 		}
-		nameListSize=nameListSize-1;
-		nameLi.push(theName);
+		else{
+			nameListSize=nameListSize-1;
+			nameLi->push(checkName);
+		}
 	}
 	return 0;				
 }
 
 int main(int argc,char* argv[]){
-
 	cerr<<"Enter name of input file: ";
 	getline(std::cin,linepointer);
 	ifstream commandFile;
@@ -155,17 +196,28 @@ int main(int argc,char* argv[]){
 			token=strtok(NULL," ");
 		}
 		string popValue1=lineCommand.pop();
-		cerr<<popValue1<<endl;
 		if(popValue1.compare("create")==0){
-			cerr<<"Got It"<<endl;
 			string popValue2=lineCommand.pop();
-			cerr<<popValue2<<endl;
-			if(checkName(nameList,popValue2)==0){
+			if(checkName(&nameList,popValue2)==0){
 				nameList.push(popValue2);
+				string type=popValue2.substr(0,1);
+				string popValue3=lineCommand.pop();
+				if(type.compare("i")==0){
+					createNewList(popValue2,popValue3,&listSLi);	
+				}
 			}
 			else{
 				cerr<<"ERROR: This name already exists!"<<endl;
 			}	
+		}
+		if(popValue1.compare("push")==0){
+			checkAndPush(&lineCommand,&listSLi);
+		}
+		if(popValue1.compare("pop")==0){
+			string popValue2=lineCommand.pop();
+			if(checkName(&nameList,popValue2)==1){
+				
+			}
 		}
 		free(wholeCommand);	
 	}
