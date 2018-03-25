@@ -19,7 +19,7 @@ class simpleList
 				Node *nextNode;
 				Object dataField;
 			public:
-				Node(Object data=Object(),Node *next=NULL)	//Copy value and set pointer
+				Node(Object data=Object(),Node *next=NULL)	
 				:dataField(data),nextNode(next){}
 		};
 	public:
@@ -99,7 +99,6 @@ class stack: public simpleList<Object>
 		Object pop(){
 			Object returnValue;
 			if(simpleList<Object>::getTheSize()>0){
-				//returnValue=simpleList<Object>::head->dataField;
 				returnValue=simpleList<Object>::getHeadData();
 			}
 			simpleList<Object>::removeFromStart();
@@ -126,7 +125,6 @@ class queue: public simpleList<Object>
 		Object pop(){
 			Object returnValue;
 			if(simpleList<Object>::getTheSize()>0){
-				//returnValue=simpleList<Object>::head->dataField;
 				returnValue=simpleList<Object>::getHeadData();
 			}
 			simpleList<Object>::removeFromStart();
@@ -209,8 +207,6 @@ int main(int argc,char* argv[]){
 	ofstream outputResult(outFile.c_str());
 	streambuf *coutbuf=cout.rdbuf();		//Save the old cout stream
 	cout.rdbuf(outputResult.rdbuf());
-	//const char *outputFile=outFile.c_str();
-	//outputResult.open(outputFile,ios::out);
 	char *token=NULL;
 	queue<string> nameList=queue<string>();		//Create a queue to hold the name of all current queue and stack
 	list<simpleList<int> *> listSLi;
