@@ -1,3 +1,14 @@
+//Author:Yingzhi Hao --ECE264 Project1
+//This program acts as a simple stack and queue simultor. It takes an input file containing stack and queue operations.
+//Then it executes each command-line and outputs the result to the specified output file.
+//To run this program, simply just using g++ to compile and run the executable file without any arguments.
+//For example, 
+//g++ listSim.cpp -o listSim
+//./listSim
+//The user will need to input the input command-file and the output result-file. Input a non-existing file will lead to 
+//immediate termination of the program.
+
+
 #include <iostream>
 #include <cstdlib>
 #include <cstdio>
@@ -9,6 +20,9 @@
 #include <string.h>
 
 using namespace std;
+
+//class simpleList is the base class of a singly-linked list. It contains a special "theSize" data member
+//to indicate whether is empty or not.
 
 template <typename Object>
 class simpleList
@@ -80,6 +94,8 @@ class simpleList
 		string listName;
 };
 
+//class stack can create singly-linked LIFO lists
+
 template <typename Object>
 class stack: public simpleList<Object>
 {
@@ -105,6 +121,8 @@ class stack: public simpleList<Object>
 			return returnValue;
 		}
 };
+
+//class queue can create singly-linked FIFO lists
 
 template <typename Object>
 class queue: public simpleList<Object>
@@ -132,6 +150,10 @@ class queue: public simpleList<Object>
 		}
 };
 
+//function checkAndPush takes a string and does a linear search through a name list to find the correct pointer to 
+//the list that has that string as its name. Once it finds the correct pointer, a value passed to the function is
+//pushed onto the list.
+
 template <typename Object>
 void checkAndPush(string listName, string listValue, list<simpleList<Object>* > *toEachList){
 	typename list<simpleList<Object>* >::iterator it;
@@ -144,6 +166,9 @@ void checkAndPush(string listName, string listValue, list<simpleList<Object>* > 
 		}
 	}
 }
+
+//function checkAndPop basicly does the same thing as checkAndPush, except that it pop and return a value from the 
+//corresponding list rather than pushing.
 
 template <typename Object>
 void checkAndPop(string listName, list<simpleList<Object>* > *toEachList){
@@ -162,6 +187,9 @@ void checkAndPop(string listName, list<simpleList<Object>* > *toEachList){
 	}
 }
 
+//function createNewList creates a new stack or queue and push its pointer to the corresponding lists that are used by
+//function checkAndPush and checkAndPop
+
 template <typename Object>
 void createNewList(string listName, string listType, list<simpleList<Object>* > *toEachList){
 	if(listType.compare("stack")==0){
@@ -178,6 +206,11 @@ void createNewList(string listName, string listType, list<simpleList<Object>* > 
 
 std::string linepointer;
 std::string outFile;
+
+//function checkName takes a name list and a string. It searches through the list to check if the string
+//exists in the list or not. It returns 0 if the string is in the list, and returns 1 if not. The name
+//list is a queue that creates by the class queue. This function does a pop() to perform checking, and then
+//does a push() to push the value back to the queue.
 
 int checkName(queue<string> *nameLi,string theName){
 	int nameListSize=nameLi->getTheSize();
@@ -217,7 +250,7 @@ int main(int argc,char* argv[]){
 		char* wholeCommand=strdup(linepointer.c_str());
 		queue<string> lineCommand=queue<string>();
 		token=strtok(wholeCommand," ");
-		while(token!=NULL){
+		while(token!=NULL){			//Parse on comand line into two or three tokens and store them in a queue
 			lineCommand.push(string(token));
 			token=strtok(NULL," ");
 		}
