@@ -40,6 +40,10 @@ class simpleList
 		simpleList(){
 			theSize=0;
 		}
+		~simpleList(){
+			clear();
+			delete head;		//head and tail are pointing to the same memory space at the end. Don't free twice.
+		}
 		string getName(){
 			return listName;
 		}
@@ -80,12 +84,17 @@ class simpleList
 			if(theSize>0){
 				Node *temp=head;
 				head=head->nextNode;
-				delete temp;
+				delete temp;			//Free the original head
 				theSize--;
 			}
 		}
 		Object getHeadData(){
 			return head->dataField;
+		}
+		void clear(){
+			while(getTheSize()!=0){
+				removeFromStart();
+			}
 		}
 	private:
 		int theSize;
