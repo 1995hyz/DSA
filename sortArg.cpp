@@ -149,49 +149,21 @@ void sortDataList(list<Data *> &l, int field) {
 }
 
 void insertSort1(list<Data *> &l){
-	list<Data *>::iterator it1=l.begin();
-	list<Data *>::iterator it2=l.begin();
-	it1=next(it1,1);
-	for(int i=1;i<10;i++){
+	unsigned int listSize=l.size();
+	Data** dataArray=new Data*[listSize];
+	fillArray(l,dataArray,listSize);
+	Data* temp;
+	for(int i=1;i<listSize;i++){
+		temp=dataArray[i];
 		int j=i-1;
-		it2=l.begin();
-		it2=next(it2,i-1);
-		for(j;j>=0;j--){
-			if((*it1)->val1>=(*it2)->val1){
-				l.insert(next(it2,1),*it1);
-				it1=l.erase(it1);
-				break;
-			}
-			else{
-				if(j!=0){
-					it2=prev(it2,1);
-				}
-				else{
-					l.insert(it2,*it1);
-					it1=l.erase(it1);
-				}
-			}
+		while((j>=0)&&(dataArray[j]->val1>temp->val1)){
+			dataArray[j+1]=dataArray[j];
+			j--;
 		}
+		dataArray[j+1]=temp;
 	}
-	it1=next(l.begin(),10);
-	while(it1!=l.end()){		
-		it2=prev(it1,1);
-		for(int i=0;i<10;i++){
-			if((*it1)->val1>=(*it2)->val1){
-				l.insert(next(it2,1),*it1);
-				it1=l.erase(it1);
-				break;
-			}
-			else{
-				if(i!=9){
-					it2=prev(it2,1);
-				}
-				else{
-					l.insert(it2,*it1);
-					it1=l.erase(it1);
-				}
-			}
-		}	
+	for(unsigned int i=0;i<listSize;i++){
+		l.push_back(dataArray[i]);
 	}
 }
 
