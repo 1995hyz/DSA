@@ -1,6 +1,0 @@
-a
-word
-Word
-test
-additional
-experiment
