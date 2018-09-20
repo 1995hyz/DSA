@@ -2,6 +2,7 @@
 #include <fstream>
 #include "hash.h"
 #include <string>
+#include <algorithm>
 #include <cstdlib>
 
 using namespace std;
@@ -15,6 +16,7 @@ void loadDict(const string &dictName){
 	string word;
 	hashTable dictionary(5);
 	while(getline(input, word)){
+		std::transform(word.begin(), word.end(), word.begin(), ::tolower);
 		int insertResult = dictionary.insert(word);
 		if(insertResult==0){
 			//cout<<"Add "<<word<<endl;
