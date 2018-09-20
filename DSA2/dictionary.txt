@@ -1,6 +1,6 @@
 a
 word
-word
+Word
 test
 additional
 experiment
