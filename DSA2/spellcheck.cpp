@@ -17,6 +17,7 @@ int checkWord(const string &word, hashTable *dictionary){
 	}
 }
 
+//This function load a dictionary into a hashtable.
 void loadDict(const string &dictName, hashTable* dictionary){
 	ifstream input(dictName.c_str());
 	if(!input){
@@ -37,6 +38,7 @@ void loadDict(const string &dictName, hashTable* dictionary){
 	}
 }
 
+//This function loads a file and check every word with the dictionary.
 void loadFile(const string &fileName, hashTable *dictionary){
 	ifstream input(fileName.c_str());
 	if(!input){
@@ -102,6 +104,7 @@ int main(){
 	string outputName;
 	cout<<"Enter name of output file: ";
 	cin>>outputName;
+	clock_t t3 = clock();
 	ofstream output(outputName.c_str());
 	if(!output){
 		cerr<<"Error: couldn't open: "<<outputName<<endl;
@@ -113,5 +116,8 @@ int main(){
 	loadFile(inputName, &dictionary);
 	cout.rdbuf(oldCout);
 	output.close();
+	clock_t t4 = clock();
+	double timeDiff2 = ((double)(t3 - t4) / CLOCKS_PER_SEC);
+	cout<<"Total time (in seconds) to check document: "<<timeDiff2<<endl;
 	return 0;
 }

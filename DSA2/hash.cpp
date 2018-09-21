@@ -96,6 +96,7 @@ bool hashTable::contains(const std::string &key){
 }
 
 bool hashTable::rehash(){
+	try{
 	std::vector<hashItem> old_data = data;
 	int upgradeSize=getPrime(capacity*2);
 	int oldCapacity = capacity;
@@ -127,4 +128,7 @@ bool hashTable::rehash(){
 		}
 	}
 	return true;
+	}catch(...){
+		return false;
+	}
 }
