@@ -9,7 +9,6 @@
 using namespace std;
 
 int checkWord(const string &word, hashTable *dictionary){
-	cout<<dictionary->contains(word)<<endl;
 	if(dictionary->contains(word)){
 		return 1;
 	}
@@ -32,10 +31,17 @@ void loadDict(const string &dictName, hashTable* dictionary){
 			//cout<<"Add "<<word<<endl;
 			int temp = 0;
 		}
-		else if (insertResult==1){
-			cout<<"Already exist"<<endl;
+		else if(insertResult==2){
+			cout<<"Error: rehash fails"<<endl;
+			exit(1);
 		}
 	}
+	/*input.clear();
+	input.seekg(0, ios::beg);
+	while(getline(input, word)){
+		std::transform(word.begin(), word.end(), word.begin(), ::tolower);
+		cout<<word<<" "<<dictionary->findPos(word)<<endl;
+	}*/
 }
 
 void loadFile(const string &fileName, hashTable *dictionary){
@@ -78,7 +84,6 @@ void loadFile(const string &fileName, hashTable *dictionary){
 			}
 			else{	
 				if(!containNumber && !checkWord(temp, dictionary)){
-					cout<<checkWord(temp, dictionary)<<endl;
 					cout<<"Unknown word at line "<<lineCounter<<": "<<temp<<endl;
 				}
 			}

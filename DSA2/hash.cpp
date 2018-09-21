@@ -102,17 +102,18 @@ bool hashTable::contains(const std::string &key){
 bool hashTable::rehash(){
 	std::vector<hashItem> old_data = data;
 	int upgradeSize=getPrime(capacity*2);
+	int oldCapacity = capacity;
 	data.resize(upgradeSize);
-	capacity = upgradeSize;
 	//Clear original hashtable.
-	for(int i=0; i<filled; i++){
+	for(int i=0; i<oldCapacity; i++){
 		data[i].key = "";
 		data[i].isOccupied = false;
 		data[i].isDeleted = false;
 		data[i].pv = NULL;
 	}
+	capacity = upgradeSize;
 	//Refill to new hashtable
-	for(int i=0; i<filled; i++){
+	for(int i=0; i<oldCapacity; i++){
 		if(old_data[i].isOccupied){
 			int hashValue = hash(old_data[i].key);
 			for(int j=hashValue; j<capacity; j++){
@@ -129,6 +130,6 @@ bool hashTable::rehash(){
 			}
 		}
 	}
-	std::cout<<"Add Successfully"<<std::endl;
 	std::cout<<"Size: "<<data.size()<<std::endl;
+	return true;
 }
