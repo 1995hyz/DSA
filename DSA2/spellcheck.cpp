@@ -31,7 +31,7 @@ void loadDict(const string &dictName, hashTable* dictionary){
 			int temp = 0;
 		}
 		else if(insertResult==2){
-			cout<<"Error: rehash fails"<<endl;
+			cerr<<"Error: rehash fails"<<endl;
 			exit(1);
 		}
 	}
@@ -102,5 +102,16 @@ int main(){
 	string outputName;
 	cout<<"Enter name of output file: ";
 	cin>>outputName;
+	ofstream output(outputName.c_str());
+	if(!output){
+		cerr<<"Error: couldn't open: "<<outputName<<endl;
+		exit(1);
+	}
+	streambuf* oldCout = cout.rdbuf();
+	streambuf* newCout = output.rdbuf();
+	cout.rdbuf(newCout);
 	loadFile(inputName, &dictionary);
+	cout.rdbuf(oldCout);
+	output.close();
+	return 0;
 }
