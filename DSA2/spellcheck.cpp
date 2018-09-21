@@ -28,7 +28,6 @@ void loadDict(const string &dictName, hashTable* dictionary){
 		std::transform(word.begin(), word.end(), word.begin(), ::tolower);
 		int insertResult = dictionary->insert(word);
 		if(insertResult==0){
-			//cout<<"Add "<<word<<endl;
 			int temp = 0;
 		}
 		else if(insertResult==2){
@@ -36,12 +35,6 @@ void loadDict(const string &dictName, hashTable* dictionary){
 			exit(1);
 		}
 	}
-	/*input.clear();
-	input.seekg(0, ios::beg);
-	while(getline(input, word)){
-		std::transform(word.begin(), word.end(), word.begin(), ::tolower);
-		cout<<word<<" "<<dictionary->findPos(word)<<endl;
-	}*/
 }
 
 void loadFile(const string &fileName, hashTable *dictionary){
@@ -91,7 +84,6 @@ void loadFile(const string &fileName, hashTable *dictionary){
 		}
 		lineCounter++;
 	}
-	cout<<"File end."<<endl;
 }
 
 int main(){

@@ -27,7 +27,6 @@ unsigned int hashTable::getPrime(int size){
 		}
 		temp++;
 	}
-	std::cout<<"Prime Number: "<<temp<<std::endl;
 	return temp;
 }
 
@@ -67,9 +66,6 @@ int hashTable::insert(const std::string &key, void *pv){
 			return 2;
 		}
 	}
-	/*for(int i=0; i<capacity; i++){
-		std::cout<<data[i].key<<std::endl;
-	}*/
 	return 0;
 }
 
@@ -130,6 +126,5 @@ bool hashTable::rehash(){
 			}
 		}
 	}
-	std::cout<<"Size: "<<data.size()<<std::endl;
 	return true;
 }
