@@ -67,9 +67,9 @@ int hashTable::insert(const std::string &key, void *pv){
 			return 2;
 		}
 	}
-	for(int i=0; i<capacity; i++){
+	/*for(int i=0; i<capacity; i++){
 		std::cout<<data[i].key<<std::endl;
-	}
+	}*/
 	return 0;
 }
 
