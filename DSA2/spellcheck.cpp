@@ -52,8 +52,12 @@ void loadFile(const string &fileName, hashTable *dictionary){
 		string temp = "";
 		int wordCounter = 0;
 		bool containNumber = false;
+		bool numberFlag = false;
 		for(int i=0; i<singleLine.length(); i++){
 			containNumber = (47<singleLine[i] && singleLine[i]<58);
+			if(containNumber){
+				numberFlag = true;
+			}
 			if(singleLine[i]==39 || singleLine[i]==45 || containNumber || (96<singleLine[i] && singleLine[i]<123)){
 				temp = temp + singleLine[i];
 				wordCounter++;
@@ -64,13 +68,14 @@ void loadFile(const string &fileName, hashTable *dictionary){
 						cout<<"Long word at line "<<lineCounter<<", starts: "<<temp.substr(0,20)<<endl;
 					}
 					else{	
-						if(!containNumber && !checkWord(temp, dictionary)){
+						if(!numberFlag && !checkWord(temp, dictionary)){
 							cout<<"Unknown word at line "<<lineCounter<<": "<<temp<<endl;
 						}
 					}
 				}
 				temp = "";
 				wordCounter = 0;
+				numberFlag = false;
 			}
 		}
 		if(!temp.empty()){
@@ -78,7 +83,7 @@ void loadFile(const string &fileName, hashTable *dictionary){
 				cout<<"Long word at line "<<lineCounter<<", starts: "<<temp.substr(0,20)<<endl;
 			}
 			else{	
-				if(!containNumber && !checkWord(temp, dictionary)){
+				if(!numberFlag && !checkWord(temp, dictionary)){
 					cout<<"Unknown word at line "<<lineCounter<<": "<<temp<<endl;
 				}
 			}
