@@ -122,7 +122,7 @@ int main(){
 	cout.rdbuf(oldCout);
 	output.close();
 	clock_t t4 = clock();
-	double timeDiff2 = ((double)(t3 - t4) / CLOCKS_PER_SEC);
+	double timeDiff2 = ((double)(t4 - t3) / CLOCKS_PER_SEC);
 	cout<<"Total time (in seconds) to check document: "<<timeDiff2<<endl;
 	return 0;
 }
