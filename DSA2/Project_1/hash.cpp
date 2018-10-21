@@ -132,3 +132,35 @@ bool hashTable::rehash(){
 		return false;
 	}
 }
+
+void* hashTable::getPointer(const std::string &key, bool *b){
+	if(! contains(key)){
+		if(! (b==NULL)){
+			*b = false;
+		}
+		return NULL;
+	}
+	if(! (b==NULL)){
+		*b = true;
+	}
+	int position = findPos(key);
+	return data[position].pv;
+}
+
+int hashTable::setPointer(const std::string &key, void* pv){
+	if(! contains(key)){
+		return 1;
+	}
+	int position = findPos(key);
+	data[position].pv = pv;
+	return 0;
+}
+
+bool hashTable::remove(const std::string &key){
+	if(! contains(key)){
+		return false;
+	}
+	int position = findPos(key);
+	data[position].isDeleted = true;
+	return true;
+}

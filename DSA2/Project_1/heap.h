@@ -81,6 +81,9 @@ class heap {
 	void *pv;
   };
   std::vector<node> data;
+  void percolateUp(int posCur);
+  void percolateDown(int posCur);
+  int getPos(node *pn);
 };
 
 #endif
