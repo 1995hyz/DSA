@@ -72,7 +72,7 @@ int hashTable::insert(const std::string &key, void *pv){
 int hashTable::findPos(const std::string &key){
 	int position = hash(key);
 	while(data[position].isOccupied){
-		if(data[position].key == key){
+		if(data[position].key == key && !data[position].isDeleted){
 			return position;
 		}
 		else{	

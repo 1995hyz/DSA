@@ -46,7 +46,7 @@ int heap::insert(const string &id, int key, void* pv){
 	int hole = ++currentSize;
 	for(; hole>1 && key<data[hole/2].key; hole/=2){
 		data[hole] = data[hole/2];
-		searchTable->setPointer(id, &data[hole]);
+		searchTable->setPointer(data[hole].id, &data[hole]);
 	}
 	data[hole].key = key;
 	data[hole].id = id;
@@ -66,7 +66,6 @@ int heap::setKey(const string &id, int key){
 	}
 	node* pn = static_cast<node *> (searchTable->getPointer(id));
 	int oldKey = pn->key;
-	cout<<"oldKey: "<<oldKey<<"newKey: "<<key<<endl;
 	if(key < oldKey){
 		int hole = getPos(pn);
 		data[hole].key = key;
@@ -92,7 +91,7 @@ int heap::setKey(const string &id, int key){
 }
 
 int heap::deleteMin(string *pId, int *pKey, void *ppData){
-	if(capacity == 0){
+	if(currentSize == 0){
 		return 1;
 	}
 	if(! (pId==NULL)){
@@ -112,18 +111,21 @@ int heap::deleteMin(string *pId, int *pKey, void *ppData){
 	data[currentSize+1].key = 0;
 	data[currentSize+1].pv = NULL;
 	
-	for(int i=0; i<capacity+1; i++){
+	/*for(int i=0; i<capacity+1; i++){
 		cout<<i<<": "<<data[i].id<<endl;
-	}
+	}*/
+
 	return 0;
 }
 
 int heap::remove(const string &id, int *pKey, void *ppData){
-	int minKey = data[1].key - 1;
-	int haveKey = setKey(id, minKey);
-	if(haveKey){
+	if(! searchTable->contains(id)){
 		return 1;
 	}
-	deleteMin(NULL, pKey, ppData);
+	int oldKey = (static_cast<node*> (searchTable->getPointer(id)))->key;
+	int minKey = data[1].key - 1;
+	setKey(id, minKey);
+	*pKey = oldKey;
+	deleteMin(NULL, NULL, ppData);
 	return 0;
 }
