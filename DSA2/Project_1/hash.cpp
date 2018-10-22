@@ -49,7 +49,7 @@ int hashTable::insert(const std::string &key, void *pv){
 	}
 	int hashValue = hash(key);
 	for(int i=hashValue; i<capacity; i++){
-		if (!data[i].isOccupied){
+		if (!data[i].isOccupied || data[i].isDeleted){
 			data[i].key = key;
 			data[i].isOccupied = true;
 			data[i].pv = pv;
@@ -111,7 +111,7 @@ bool hashTable::rehash(){
 	capacity = upgradeSize;
 	//Refill to new hashtable
 	for(int i=0; i<oldCapacity; i++){
-		if(old_data[i].isOccupied){
+		if(old_data[i].isOccupied && !old_data[i].isDeleted){
 			int hashValue = hash(old_data[i].key);
 			for(int j=hashValue; j<capacity; j++){
 				if (!data[j].isOccupied){
