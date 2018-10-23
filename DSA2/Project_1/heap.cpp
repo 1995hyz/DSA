@@ -52,11 +52,6 @@ int heap::insert(const string &id, int key, void* pv){
 	data[hole].id = id;
 	data[hole].pv = pv;
 	searchTable->insert(id, &data[hole]);
-	
-	/*for(int i=0; i<capacity+1; i++){
-		cout<<data[i].id<<endl;
-	}*/
-
 	return 0;
 }
 
@@ -82,11 +77,6 @@ int heap::setKey(const string &id, int key){
 		data[position].key = key;
 		percolateDown(position);
 	}
-
-	/*for(int i=0; i<capacity+1; i++){
-		cout<<data[i].id<<endl;
-	}*/
-
 	return 0;
 }
 
@@ -110,11 +100,6 @@ int heap::deleteMin(string *pId, int *pKey, void *ppData){
 	data[currentSize+1].id = "";
 	data[currentSize+1].key = 0;
 	data[currentSize+1].pv = NULL;
-	
-	/*for(int i=0; i<capacity+1; i++){
-		cout<<i<<": "<<data[i].id<<endl;
-	}*/
-
 	return 0;
 }
 
