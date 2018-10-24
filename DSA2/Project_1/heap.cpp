@@ -7,7 +7,7 @@ using namespace std;
 heap::heap(int size){
 	capacity = size;
 	currentSize = 0;
-	searchTable = new hashTable(capacity * 2);
+	searchTable = new hashTable(capacity + 2);
 	data.resize(capacity+1);
 }
 
@@ -67,10 +67,10 @@ int heap::setKey(const string &id, int key){
 		node temp = data[hole];
 		for(; hole>1 && key<data[hole/2].key; hole/=2){
 			data[hole] = data[hole/2];
-			searchTable->setPointer(id, &data[hole]);
+			searchTable->setPointer(data[hole].id, &data[hole]);
 		}
 		data[hole] = temp;
-		searchTable->setPointer(id, &data[hole]);
+		searchTable->setPointer(data[hole].id, &data[hole]);
 	}
 	else if(key > oldKey){
 		int position = getPos(pn);
