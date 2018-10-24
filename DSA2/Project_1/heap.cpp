@@ -95,7 +95,7 @@ int heap::deleteMin(string *pId, int *pKey, void *ppData){
 	}
 	searchTable->remove(data[1].id);
 	data[1] = data[currentSize--];
-	searchTable->setPointer(data[currentSize].id, &data[1]);
+	searchTable->setPointer(data[1].id, &data[1]);
 	percolateDown(1);
 	data[currentSize+1].id = "";
 	data[currentSize+1].key = 0;
