@@ -7,7 +7,7 @@ using namespace std;
 heap::heap(int size){
 	capacity = size;
 	currentSize = 0;
-	searchTable = new hashTable(capacity + 2);
+	searchTable = new hashTable(capacity * 2);
 	data.resize(capacity+1);
 }
 
