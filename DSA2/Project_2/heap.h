@@ -49,7 +49,7 @@ int hashTable::insert(const std::string &key, void *pv){
 	}
 	int hashValue = hash(key);
 	for(int i=hashValue; i<capacity; i++){
-		if (!data[i].isOccupied | data[i].isDeleted){
+		if (!data[i].isOccupied || data[i].isDeleted){
 			data[i].key = key;
 			data[i].isOccupied = true;
 			data[i].pv = pv;
