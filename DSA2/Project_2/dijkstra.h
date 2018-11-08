@@ -5,6 +5,7 @@
 #include <list>
 #include <iostream>
 #include "heap.h"
+#include "hash.h"
 
 class dijkstraHeap {
 	
@@ -32,7 +33,7 @@ class graph {
 	public:
 	
 	//graph - The constructor.
-	graph();
+	graph(int capacity);
 	
 	//insert - Insert a vertex into the graph.
 	//0 on success
@@ -47,21 +48,24 @@ class graph {
 
 	private:
 	
-	class edge {
+	class Edge {
 		public:
-		std::string source;
-		std::string destination;
+		edge(const std::string &source, const std::string &destination, int cost);
+		const std::string source;
+		const std::string destination;
 		int cost;
 	}
 	
-	class vertex{
+	class Vertex{
 		public:
-		std::string id;
+		vertex(const std::string &id);
+		const std::string id;
 		std::list<edge> adjacentEdge;
 	}
 
 	std::list<vertex> vertecies;
 	hashtable* vertexTable;
+	int capacity;
 	
 	//checkExist - Check if a vertex has already existed.
 	//0 on not existed.

@@ -1,166 +1,89 @@
-#include "hash.h"
-#include <iostream>
+#ifndef _HEAP_H
+#define _HEAP_H 
+
 #include <vector>
+#include <string>
+#include "hash.h"
 
-hashTable::hashTable(int size){
-	int actualSize = getPrime(size);
-	data.resize(actualSize);
-	capacity = actualSize;
-}
+class heap {
 
-int checkPrime(int number){
-	int i = 2;
-	for(i; i<number; i++){
-		if(number%i == 0){
-			return 1;
-		}
-	}
-	return 0;
-}
+ public: 
 
-unsigned int hashTable::getPrime(int size){
-	int i = 2;
-	int temp = size;
-	while(true){
-		if(checkPrime(temp) == 0){
-			break;
-		}
-		temp++;
-	}
-	return temp;
-}
+//
+  // heap - The constructor allocates space for the nodes of the heap
+  // and the mapping (hash table) based on the specified capacity
+  //
+  heap(int capacity);
 
-int hashTable::hash(const std::string &key){
-	int hashValue = 0;
-	int i = 0;
-	for(i; i<key.length(); i++){
-		hashValue = 37 * hashValue + key[i];
-	}
-	hashValue %= capacity;
-	if (hashValue < 0){
-		hashValue += capacity;
-	}
-	return hashValue;
-}
+  //
+  // insert - Inserts a new node into the binary heap
+  //
+  // Inserts a node with the specified id string, key,
+  // and optionally a pointer. They key is used to
+  // determine the final position of the new node.
+  //
+  // Returns:
+  //   0 on success
+  //   1 if the heap is already filled to capacity
+  //   2 if a node with the given id already exists (but the heap
+  //     is not filled to capacity)
+  //
+  int insert(const std::string &id, int key, void *pv = NULL);
 
-int hashTable::insert(const std::string &key, void *pv){
-	if(contains(key)){
-		return 1;
-	}
-	int hashValue = hash(key);
-	for(int i=hashValue; i<capacity; i++){
-		if (!data[i].isOccupied || data[i].isDeleted){
-			data[i].key = key;
-			data[i].isOccupied = true;
-			data[i].pv = pv;
-			data[i].isDeleted = false;
-			break;
-		}
-		if(i == (capacity-1)){
-			i=-1;
-		}
-	}
-	filled++;
-	if(filled*2 > capacity){
-		if(!rehash()){
-			return 2;
-		}
-	}
-	return 0;
-}
+  //
+  // setKey - set the key of the specified node to the specified value
+  //
+  // I have decided that the class should provide this member function
+  // instead of two separate increaseKey and decreaseKey functions.
+  //
+  // Returns:
+  //   0 on success
+  //   1 if a node with the given id does not exist
+  //
+  int setKey(const std::string &id, int key);
 
-int hashTable::findPos(const std::string &key){
-	int position = hash(key);
-	while(data[position].isOccupied){
-		if(data[position].key == key && !data[position].isDeleted){
-			return position;
-		}
-		else{	
-			if(position >= capacity-1){
-				position = 0;
-			}
-			else{
-				position++;
-			}
-			continue;
-		}
-	}
-	return -1;
-}
+  //
+  // deleteMin - return the data associated with the smallest key
+  //             and delete that node from the binary heap
+  //
+  // If pId is supplied (i.e., it is not NULL), write to that address
+  // the id of the node being deleted. If pKey is supplied, write to
+  // that address the key of the node being deleted. If ppData is
+  // supplied, write to that address the associated void pointer.
+  //
+  // Returns:
+  //   0 on success
+  //   1 if the heap is empty
+  //
+  int deleteMin(std::string *pId = NULL, int *pKey = NULL, void *ppData = NULL);
 
-bool hashTable::contains(const std::string &key){
-	if(findPos(key) != -1){
-		return true;
-	}
-	return false;
-}
+  //
+  // remove - delete the node with the specified id from the binary heap
+  //
+  // If pKey is supplied, write to that address the key of the node
+  // being deleted. If ppData is supplied, write to that address the
+  // associated void pointer.
+  //
+  // Returns:
+  //   0 on success
+  //   1 if a node with the given id does not exist
+  //
+  int remove(const std::string &id, int *pKey = NULL, void *ppData = NULL);
 
-bool hashTable::rehash(){
-	try{
-	std::vector<hashItem> old_data = data;
-	int upgradeSize=getPrime(capacity*2);
-	int oldCapacity = capacity;
-	data.resize(upgradeSize);
-	//Clear original hashtable.
-	for(int i=0; i<oldCapacity; i++){
-		data[i].key = "";
-		data[i].isOccupied = false;
-		data[i].isDeleted = false;
-		data[i].pv = NULL;
-	}
-	capacity = upgradeSize;
-	//Refill to new hashtable
-	for(int i=0; i<oldCapacity; i++){
-		if(old_data[i].isOccupied && !old_data[i].isDeleted){
-			int hashValue = hash(old_data[i].key);
-			for(int j=hashValue; j<capacity; j++){
-				if (!data[j].isOccupied){
-					data[j].key = old_data[i].key;
-					data[j].isOccupied = true;
-					data[j].pv = old_data[i].pv;
-					data[j].isDeleted = false;
-					break;
-				}
-				if(j==(capacity-1)){
-					j=-1;
-				}
-			}
-		}
-	}
-	return true;
-	}catch(...){
-		return false;
-	}
-}
+ private:
+  int capacity;
+  int currentSize;
+  hashTable* searchTable;
+  class node {
+    public:
+	std::string id;
+	int key;
+	void *pv;
+  };
+  std::vector<node> data;
+  void percolateUp(int posCur);
+  void percolateDown(int posCur);
+  int getPos(node *pn);
+};
 
-void* hashTable::getPointer(const std::string &key, bool *b){
-	if(! contains(key)){
-		if(! (b==NULL)){
-			*b = false;
-		}
-		return NULL;
-	}
-	if(! (b==NULL)){
-		*b = true;
-	}
-	int position = findPos(key);
-	return data[position].pv;
-}
-
-int hashTable::setPointer(const std::string &key, void* pv){
-	if(! contains(key)){
-		return 1;
-	}
-	int position = findPos(key);
-	data[position].pv = pv;
-	return 0;
-}
-
-bool hashTable::remove(const std::string &key){
-	if(! contains(key)){
-		return false;
-	}
-	int position = findPos(key);
-	data[position].isDeleted = true;
-	return true;
-}
+#endif
