@@ -18,7 +18,10 @@ int graph::insert(const string &id){
 	}
 	Vertex newVertex = Vertex(id);
 	vertecies.push_back(newVertex);
-	vertexTable.insert(id, &newVertex);
+	if(vertexTable.insert(id, &newVertex) != 0){
+		cerr<<"Error: Fail to insert vertex "<<id<<" to the hashTable."<<endl;
+		return 1;
+	}
 	return 0;
 }
 

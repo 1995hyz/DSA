@@ -68,6 +68,7 @@ class graph {
 	int checkExist(const std::string &id);
 	//insert - Insert a vertex into the graph.
        	//0 on success
+       	//1 on hashTable insertion error.
        	//2 if the vertex has already exists in the graph.
        	int insert(const std::string &id);
 

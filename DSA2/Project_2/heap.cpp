@@ -1,166 +1,116 @@
+#include "heap.h"
 #include "hash.h"
 #include <iostream>
-#include <vector>
 
-hashTable::hashTable(int size){
-	int actualSize = getPrime(size);
-	data.resize(actualSize);
-	capacity = actualSize;
+using namespace std;
+
+heap::heap(int size){
+	capacity = size;
+	currentSize = 0;
+	searchTable = new hashTable(capacity * 2);
+	data.resize(capacity+1);
 }
 
-int checkPrime(int number){
-	int i = 2;
-	for(i; i<number; i++){
-		if(number%i == 0){
-			return 1;
-		}
-	}
-	return 0;
+int heap::getPos(node *pn){
+	int pos = pn - &data[0];
+	return pos;
 }
 
-unsigned int hashTable::getPrime(int size){
-	int i = 2;
-	int temp = size;
-	while(true){
-		if(checkPrime(temp) == 0){
-			break;
+void heap::percolateDown(int hole){
+	int child = 0;
+	node temp = data[hole];
+	for(; hole*2 <= currentSize; hole=child){
+		child = hole * 2;
+		if((child != currentSize) && (data[child+1].key < data[child].key)){
+			child++;
 		}
-		temp++;
-	}
-	return temp;
-}
-
-int hashTable::hash(const std::string &key){
-	int hashValue = 0;
-	int i = 0;
-	for(i; i<key.length(); i++){
-		hashValue = 37 * hashValue + key[i];
-	}
-	hashValue %= capacity;
-	if (hashValue < 0){
-		hashValue += capacity;
-	}
-	return hashValue;
-}
-
-int hashTable::insert(const std::string &key, void *pv){
-	if(contains(key)){
-		return 1;
-	}
-	int hashValue = hash(key);
-	for(int i=hashValue; i<capacity; i++){
-		if (!data[i].isOccupied || data[i].isDeleted){
-			data[i].key = key;
-			data[i].isOccupied = true;
-			data[i].pv = pv;
-			data[i].isDeleted = false;
-			break;
-		}
-		if(i == (capacity-1)){
-			i=-1;
-		}
-	}
-	filled++;
-	if(filled*2 > capacity){
-		if(!rehash()){
-			return 2;
-		}
-	}
-	return 0;
-}
-
-int hashTable::findPos(const std::string &key){
-	int position = hash(key);
-	while(data[position].isOccupied){
-		if(data[position].key == key && !data[position].isDeleted){
-			return position;
+		if(data[child].key < temp.key){
+			data[hole] = data[child];
+			searchTable->setPointer(data[hole].id, &data[hole]);
 		}
 		else{	
-			if(position >= capacity-1){
-				position = 0;
-			}
-			else{
-				position++;
-			}
-			continue;
+			break;
 		}
 	}
-	return -1;
+	data[hole] = temp;
+	searchTable->setPointer(data[hole].id, &data[hole]);
 }
 
-bool hashTable::contains(const std::string &key){
-	if(findPos(key) != -1){
-		return true;
-	}
-	return false;
-}
-
-bool hashTable::rehash(){
-	try{
-	std::vector<hashItem> old_data = data;
-	int upgradeSize=getPrime(capacity*2);
-	int oldCapacity = capacity;
-	data.resize(upgradeSize);
-	//Clear original hashtable.
-	for(int i=0; i<oldCapacity; i++){
-		data[i].key = "";
-		data[i].isOccupied = false;
-		data[i].isDeleted = false;
-		data[i].pv = NULL;
-	}
-	capacity = upgradeSize;
-	//Refill to new hashtable
-	for(int i=0; i<oldCapacity; i++){
-		if(old_data[i].isOccupied && !old_data[i].isDeleted){
-			int hashValue = hash(old_data[i].key);
-			for(int j=hashValue; j<capacity; j++){
-				if (!data[j].isOccupied){
-					data[j].key = old_data[i].key;
-					data[j].isOccupied = true;
-					data[j].pv = old_data[i].pv;
-					data[j].isDeleted = false;
-					break;
-				}
-				if(j==(capacity-1)){
-					j=-1;
-				}
-			}
-		}
-	}
-	return true;
-	}catch(...){
-		return false;
-	}
-}
-
-void* hashTable::getPointer(const std::string &key, bool *b){
-	if(! contains(key)){
-		if(! (b==NULL)){
-			*b = false;
-		}
-		return NULL;
-	}
-	if(! (b==NULL)){
-		*b = true;
-	}
-	int position = findPos(key);
-	return data[position].pv;
-}
-
-int hashTable::setPointer(const std::string &key, void* pv){
-	if(! contains(key)){
+int heap::insert(const string &id, int key, void* pv){
+	if(currentSize == capacity){
 		return 1;
 	}
-	int position = findPos(key);
-	data[position].pv = pv;
+	if(searchTable->contains(id)){
+		return 2;
+	}
+	int hole = ++currentSize;
+	for(; hole>1 && key<data[hole/2].key; hole/=2){
+		data[hole] = data[hole/2];
+		searchTable->setPointer(data[hole].id, &data[hole]);
+	}
+	data[hole].key = key;
+	data[hole].id = id;
+	data[hole].pv = pv;
+	searchTable->insert(id, &data[hole]);
 	return 0;
 }
 
-bool hashTable::remove(const std::string &key){
-	if(! contains(key)){
-		return false;
+int heap::setKey(const string &id, int key){
+	if(! searchTable->contains(id)){
+		return 1;
 	}
-	int position = findPos(key);
-	data[position].isDeleted = true;
-	return true;
+	node* pn = static_cast<node *> (searchTable->getPointer(id));
+	int oldKey = pn->key;
+	if(key < oldKey){
+		int hole = getPos(pn);
+		data[hole].key = key;
+		node temp = data[hole];
+		for(; hole>1 && key<data[hole/2].key; hole/=2){
+			data[hole] = data[hole/2];
+			searchTable->setPointer(data[hole].id, &data[hole]);
+		}
+		data[hole] = temp;
+		searchTable->setPointer(data[hole].id, &data[hole]);
+	}
+	else if(key > oldKey){
+		int position = getPos(pn);
+		data[position].key = key;
+		percolateDown(position);
+	}
+	return 0;
+}
+
+int heap::deleteMin(string *pId, int *pKey, void *ppData){
+	if(currentSize == 0){
+		return 1;
+	}
+	if(! (pId==NULL)){
+		*pId = data[1].id;
+	}
+	if(! (pKey==NULL)){
+		*pKey = data[1].key;
+	}
+	if(! (ppData==NULL)){
+		ppData = data[1].pv;
+	}
+	searchTable->remove(data[1].id);
+	data[1] = data[currentSize--];
+	searchTable->setPointer(data[1].id, &data[1]);
+	percolateDown(1);
+	data[currentSize+1].id = "";
+	data[currentSize+1].key = 0;
+	data[currentSize+1].pv = NULL;
+	return 0;
+}
+
+int heap::remove(const string &id, int *pKey, void *ppData){
+	if(! searchTable->contains(id)){
+		return 1;
+	}
+	int oldKey = (static_cast<node*> (searchTable->getPointer(id)))->key;
+	int minKey = data[1].key - 1;
+	setKey(id, minKey);
+	*pKey = oldKey;
+	deleteMin(NULL, NULL, ppData);
+	return 0;
 }
