@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <cstdlib>
+#include <limits>
 #include "hash.h"
 #include "dijkstra.h"
 
@@ -44,9 +45,19 @@ int graph::addEdge(const string &id, const string &des, int cost){
 	Vertex* currentVertex = static_cast<Vertex* >(vertexTable->getPointer(id));
 	Edge newEdge = Edge();
 	currentVertex->adjacentEdge.push_back(newEdge);
-	Edge theEdge = currentVertex->adjacentEdge.back(); 
-	theEdge.source = id;
-	theEdge.destination = des;
-	theEdge.cost = cost;
+	Edge* theEdge = &(currentVertex->adjacentEdge.back()); 
+	theEdge->source = id;
+	theEdge->destination = des;
+	theEdge->cost = cost;
 	return 0;
+}
+
+dijkstraHeap::dijkstraHeap(int size){
+	capacity = size;
+	diHeap = new heap(capacity);
+}
+
+int dijkstraHeap::insert(const string &id, void* pv){
+	int max = std::numeric_limits<int>::max();
+	return diHeap->insert(id, max, pv);
 }

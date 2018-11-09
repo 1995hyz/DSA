@@ -13,4 +13,12 @@ int main(){
 	if(testGraph.addEdge("v1", "v3", 2)==0){
 		cout<<"Insertion Succeed."<<endl;
 	}
+	if(testGraph.addEdge("v2", "v3", 3)==0){
+		cout<<"Insertion Succeed."<<endl;
+	}
+	graph::iterator itr = testGraph.begin();
+	for(; itr != testGraph.end(); itr++){
+		cout<<(*itr).id<<endl;
+		cout<<(*itr).adjacentEdge.front().destination<<endl;
+	}
 }

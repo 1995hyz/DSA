@@ -18,7 +18,7 @@ class dijkstraHeap {
 	// 0 on success
 	// 1 if heap has already be filled to its capacity.
 	// 2 if the node has already exists but the heap hasn't reached to its capacity.
-	int insert(const std::string &id, int key, void* pv);
+	int insert(const std::string &id, void* pv);
 
 	//searchPath - Search the shortest cost to every vertex, given the provided start vertex.
 	void searchPath(const std::string id); 
@@ -31,7 +31,7 @@ class dijkstraHeap {
 
 class graph {
 
-	private:
+	public:
 	
 	class Edge {
 		public:
