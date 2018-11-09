@@ -30,22 +30,11 @@ class dijkstraHeap {
 };
 
 class graph {
-	public:
-	
-	//graph - The constructor.
-	graph(int capacity);
-	
-	//addEdge - Add an edge into an existing vertex.
-	//0 on success
-	//1 if the vertex doesn't exist.
-	//2 if the same edge has existed.
-	int addEdge(const std::string &id, const std::string &edge, int cost);
 
 	private:
 	
 	class Edge {
 		public:
-		//edge(const std::string &source, const std::string &destination, int cost);
 		std::string source;
 		std::string destination;
 		int cost;
@@ -53,7 +42,6 @@ class graph {
 	
 	class Vertex{
 		public:
-		//vertex(const std::string &id);
 		std::string id;
 		std::list<Edge> adjacentEdge;
 	};
@@ -67,10 +55,26 @@ class graph {
 	//1 on has existed.
 	int checkExist(const std::string &id);
 	//insert - Insert a vertex into the graph.
-       	//0 on success
-       	//1 on hashTable insertion error.
-       	//2 if the vertex has already exists in the graph.
+ 	//0 on success
+	//1 on hashTable insertion error.
+ 	//2 if the vertex has already exists in the graph.
        	int insert(const std::string &id);
+
+	public:
+	
+	//graph - The constructor.
+	graph(int capacity);
+	
+	//addEdge - Add an edge into an existing vertex.
+	//0 on success.
+	//1 on fail.
+	int addEdge(const std::string &id, const std::string &edge, int cost);
+	
+	//Define iterator.
+	typedef std::list<Vertex>::iterator iterator;
+	typedef std::list<Vertex>::const_iterator const_iterator;
+	iterator begin(){return vertecies.begin();}
+	iterator end(){return vertecies.end();}
 
 };
 
