@@ -27,7 +27,7 @@ class dijkstraHeap {
 	
 	heap* diHeap;
 	int capacity;
-}
+};
 
 class graph {
 	public:
@@ -45,21 +45,21 @@ class graph {
 	
 	class Edge {
 		public:
-		edge(const std::string &source, const std::string &destination, int cost);
-		const std::string source;
-		const std::string destination;
+		//edge(const std::string &source, const std::string &destination, int cost);
+		std::string source;
+		std::string destination;
 		int cost;
-	}
+	};
 	
 	class Vertex{
 		public:
-		vertex(const std::string &id);
-		const std::string id;
-		std::list<edge> adjacentEdge;
-	}
+		//vertex(const std::string &id);
+		std::string id;
+		std::list<Edge> adjacentEdge;
+	};
 
-	std::list<vertex> vertecies;
-	hashtable* vertexTable;
+	std::list<Vertex> vertecies;
+	hashTable* vertexTable;
 	int capacity;
 	
 	//checkExist - Check if a vertex has already existed.
@@ -72,4 +72,6 @@ class graph {
        	//2 if the vertex has already exists in the graph.
        	int insert(const std::string &id);
 
-}
+};
+
+#endif
