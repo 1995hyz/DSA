@@ -12,12 +12,20 @@ int graph::graph(int size){
 	
 }
 
-int graph::insert(const string &id, const string &edge, int cost){
+int graph::insert(const string &id){
 	if(checkExist(id)){
 		return 2;
 	}
 	Vertex newVertex = Vertex(id);
 	vertecies.push_back(newVertex);
-	Edge newEdge = Edge(id, edge, cost);
-	adjacentEdge.push_back(newEdge);
+	vertexTable.insert(id, &newVertex);
+	return 0;
+}
+
+int graph::addEdge(const string &id, const string &source, int cost){
+	if(! checkExist(id)){
+		insert(id);	
+	}
+	currentVertex = static_cast<Vertex*> (getPointer(id));
+	
 }

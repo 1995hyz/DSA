@@ -35,11 +35,6 @@ class graph {
 	//graph - The constructor.
 	graph(int capacity);
 	
-	//insert - Insert a vertex into the graph.
-	//0 on success
-	//2 if the vertex has already exists in the graph.
-	int insert(const std::string &id, const std::string &edge, int cost);
-	
 	//addEdge - Add an edge into an existing vertex.
 	//0 on success
 	//1 if the vertex doesn't exist.
@@ -71,4 +66,9 @@ class graph {
 	//0 on not existed.
 	//1 on has existed.
 	int checkExist(const std::string &id);
+	//insert - Insert a vertex into the graph.
+       	//0 on success
+       	//2 if the vertex has already exists in the graph.
+       	int insert(const std::string &id);
+
 }
