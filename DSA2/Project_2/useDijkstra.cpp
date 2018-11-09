@@ -19,6 +19,9 @@ int main(){
 	graph::iterator itr = testGraph.begin();
 	for(; itr != testGraph.end(); itr++){
 		cout<<(*itr).id<<endl;
-		cout<<(*itr).adjacentEdge.front().destination<<endl;
+		for(int i=(*itr).adjacentEdge.size(); i>0; i--){
+			cout<<(*itr).adjacentEdge.front().destination<<endl;
+			(*itr).adjacentEdge.pop_front();
+		}
 	}
 }

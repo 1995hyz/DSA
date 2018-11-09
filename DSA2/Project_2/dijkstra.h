@@ -31,7 +31,7 @@ class dijkstraHeap {
 
 class graph {
 
-	public:
+	private:
 	
 	class Edge {
 		public:
