@@ -61,6 +61,7 @@ int graph::insertHeap(const string &id, void* pv){
 void graph::buildHeap(){
 	diHeap = new heap(capacity);
 	list<Vertex>::iterator ptr;
+	ptr = vertices.begin();
 	while(ptr != vertices.end()){
 		if(insertHeap((*ptr).id, &(*ptr)) != 0){
 			cerr<<"Error: Building heap error."<<endl;
@@ -75,18 +76,19 @@ void graph::searchPath(const string &id){
 	int counter = capacity;
 	diHeap->setKey(id, keyValue);
 	while(counter > 0){
-		int* pCost;
-		string* pId;
+		int pCost;
+		string pId;
 		void* pNode;
-		diHeap->deleteMin(pId, pCost, pNode);
-		cout<<"Delete: "<<*pId<<endl;
+		diHeap->deleteMin(&pId, &pCost, pNode);
+		cout<<"Delete: "<<pId<<endl;
 		counter--;
 		Vertex* pVertex = static_cast<Vertex*> (pNode);
 		while(! pVertex->adjacentEdge.empty()){
-			if((keyValue + pVertex->adjacentEdge.front().cost) < *pCost){
+			if((keyValue + pVertex->adjacentEdge.front().cost) < pCost){
 				diHeap->setKey(pVertex->adjacentEdge.front().destination, pVertex->adjacentEdge.front().cost + keyValue);
 			}
-			pVertex->adjacentEdge.pop_front();
+			cout<<pVertex->adjacentEdge.front().destination<<endl;
+			(pVertex->adjacentEdge).pop_front();
 		}
 	}
 }
