@@ -8,8 +8,8 @@
 using namespace std;
 
 graph::graph(int size){
-	capacity = size;
-	vertexTable = new hashTable(capacity);
+	capacity = 0;
+	vertexTable = new hashTable(size);
 }
 
 int graph::checkExist(const string &id){
@@ -21,14 +21,15 @@ int graph::checkExist(const string &id){
 	}
 }
 
-int graph::insert(const string &id){
+int graph::insertVertices(const string &id){
 	if(checkExist(id)){
 		return 2;
 	}
 	Vertex newVertex = Vertex();
-	vertecies.push_back(newVertex);
-	Vertex* theVertex = &vertecies.back();
+	vertices.push_back(newVertex);
+	Vertex* theVertex = &vertices.back();
 	theVertex->id = id;
+	capacity++;
 	if(vertexTable->insert(id, theVertex) != 0){
 		cerr<<"Error: Fail to insert vertex "<<id<<" to the hashTable."<<endl;
 		return 1;
@@ -38,7 +39,7 @@ int graph::insert(const string &id){
 
 int graph::addEdge(const string &id, const string &des, int cost){
 	if(! checkExist(id)){
-		if(insert(id)==1){
+		if(insertVertices(id)==1){
 			return 1;
 		}	
 	}
@@ -52,12 +53,40 @@ int graph::addEdge(const string &id, const string &des, int cost){
 	return 0;
 }
 
-dijkstraHeap::dijkstraHeap(int size){
-	capacity = size;
-	diHeap = new heap(capacity);
-}
-
-int dijkstraHeap::insert(const string &id, void* pv){
+int graph::insertHeap(const string &id, void* pv){
 	int max = std::numeric_limits<int>::max();
 	return diHeap->insert(id, max, pv);
+}
+
+void graph::buildHeap(){
+	diHeap = new heap(capacity);
+	list<Vertex>::iterator ptr;
+	while(ptr != vertices.end()){
+		if(insertHeap((*ptr).id, &(*ptr)) != 0){
+			cerr<<"Error: Building heap error."<<endl;
+		}
+		ptr++;
+	}
+}
+
+void graph::searchPath(const string &id){
+	buildHeap();
+	int keyValue = 0;
+	int counter = capacity;
+	diHeap->setKey(id, keyValue);
+	while(counter > 0){
+		int* pCost;
+		string* pId;
+		void* pNode;
+		diHeap->deleteMin(pId, pCost, pNode);
+		cout<<"Delete: "<<*pId<<endl;
+		counter--;
+		Vertex* pVertex = static_cast<Vertex*> (pNode);
+		while(! pVertex->adjacentEdge.empty()){
+			if((keyValue + pVertex->adjacentEdge.front().cost) < *pCost){
+				diHeap->setKey(pVertex->adjacentEdge.front().destination, pVertex->adjacentEdge.front().cost + keyValue);
+			}
+			pVertex->adjacentEdge.pop_front();
+		}
+	}
 }
