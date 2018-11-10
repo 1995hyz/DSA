@@ -1,6 +1,8 @@
 #include "heap.h"
 #include "hash.h"
 #include <iostream>
+#include <stdio.h>
+#include <string.h>
 
 using namespace std;
 
@@ -91,7 +93,7 @@ int heap::deleteMin(string *pId, int *pKey, void *ppData){
 		*pKey = data[1].key;
 	}
 	if(! (ppData==NULL)){
-		ppData = data[1].pv;
+		*(void **)ppData = data[1].pv;
 	}
 	searchTable->remove(data[1].id);
 	data[1] = data[currentSize--];

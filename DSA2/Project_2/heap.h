@@ -55,7 +55,7 @@ class heap {
   //   0 on success
   //   1 if the heap is empty
   //
-  int deleteMin(std::string *pId = NULL, int *pKey = NULL, void *ppData = NULL);
+  int deleteMin(std::string *pId = NULL, int *pKey = NULL, void* ppData = NULL);
 
   //
   // remove - delete the node with the specified id from the binary heap
