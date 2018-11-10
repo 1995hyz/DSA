@@ -20,6 +20,7 @@ class graph {
 	
 	class Vertex{
 		public:
+		int cost;
 		std::string id;
 		std::list<Edge> adjacentEdge;
 	};
@@ -38,7 +39,7 @@ class graph {
  	//0 on success
 	//1 on hashTable insertion error.
  	//2 if the vertex has already exists in the graph.
-       	int insertVertices(const std::string &id);
+ 	int insertVertices(const std::string &id);
 
 	//insertHeap - Insert a node into the dijkstra heap.
 	// 0 on success.

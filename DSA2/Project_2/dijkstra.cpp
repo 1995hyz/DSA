@@ -60,13 +60,12 @@ int graph::insertHeap(const string &id, void* pv){
 
 void graph::buildHeap(){
 	diHeap = new heap(capacity);
+	int max = std::numeric_limits<int>::max();
 	list<Vertex>::iterator ptr;
 	ptr = vertices.begin();
+	(*ptr).cost = max;
 	while(ptr != vertices.end()){
-		cout<<"****** "<<(&(*ptr))->adjacentEdge.front().destination<<endl;
-		cout<<(void*)&(*ptr)<<endl;
-		cout<<&(*ptr)<<endl;
-		if(insertHeap((*ptr).id, (void*)&(*ptr)) != 0){
+		if(insertHeap((*ptr).id, &(*ptr)) != 0){
 			cerr<<"Error: Building heap error."<<endl;
 		}
 		ptr++;
@@ -75,23 +74,27 @@ void graph::buildHeap(){
 
 void graph::searchPath(const string &id){
 	buildHeap();
-	int keyValue = 0;
 	int counter = capacity;
-	diHeap->setKey(id, keyValue);
+	diHeap->setKey(id, 0);
 	while(counter > 0){
 		int pCost;
 		string pId;
 		//void* pNode;
 		Vertex* pVertex;
-		diHeap->deleteMin(&pId, &pCost, pVertex);
+		diHeap->deleteMin(&pId, &pCost, &pVertex);
 		cout<<"Delete: "<<pId<<endl;
 		counter--;
 		//Vertex* pVertex = static_cast<Vertex*> (pNode);
 		cout<<pVertex->id<<endl;
 		while(! pVertex->adjacentEdge.empty()){
-			if((keyValue + pVertex->adjacentEdge.front().cost) < pCost){
-				diHeap->setKey(pVertex->adjacentEdge.front().destination, pVertex->adjacentEdge.front().cost + keyValue);
+			string destination = pVertex->adjacentEdge.front().destination;
+			int cost = pVertex->adjacentEdge.front().cost;
+			cout<<"Destination: "<<destination<<endl;
+			int currentCost = (static_cast<Vertex*> (vertexTable->getPointer(destination)))->cost;
+			if((pCost + cost) < 0){
+				diHeap->setKey(destination, cost + pCost);
 			}
+			//(static_cast<Vertex*> (vertexTable->getPointer(pVertex->adjacentEdge.front().destination)))->cost = pVertex->adjacentEdge.front().cost + pCost;
 			cout<<pVertex->adjacentEdge.front().destination<<endl;
 			pVertex->adjacentEdge.pop_front();
 		}
