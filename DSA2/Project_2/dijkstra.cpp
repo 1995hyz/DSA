@@ -50,6 +50,11 @@ int graph::addEdge(const string &id, const string &des, int cost){
 	theEdge->source = id;
 	theEdge->destination = des;
 	theEdge->cost = cost;
+	if(! checkExist(des)){
+		if(insertVertices(des)==1){
+			return 1;
+		}
+	}
 	return 0;
 }
 
@@ -63,40 +68,55 @@ void graph::buildHeap(){
 	int max = std::numeric_limits<int>::max();
 	list<Vertex>::iterator ptr;
 	ptr = vertices.begin();
-	(*ptr).cost = max;
 	while(ptr != vertices.end()){
 		if(insertHeap((*ptr).id, &(*ptr)) != 0){
 			cerr<<"Error: Building heap error."<<endl;
 		}
+		(*ptr).cost = max;
 		ptr++;
 	}
 }
 
+void graph::printResult(){
+	int max = std::numeric_limits<int>::max();
+	list<Vertex>::iterator ptr;
+	ptr = vertices.begin();
+	while(ptr != vertices.end()){
+		if((*ptr).cost == max){
+			cout<<(*ptr).id<<": NO PATH"<<endl;
+		}
+		else{
+			cout<<(*ptr).id<<": "<<(*ptr).cost<<endl;
+		}
+		ptr++;
+	}	
+}
+
 void graph::searchPath(const string &id){
 	buildHeap();
-	int counter = capacity;
 	diHeap->setKey(id, 0);
+	static_cast<Vertex*> (vertexTable->getPointer(id))->cost = 0;
+	int counter = capacity;
 	while(counter > 0){
 		int pCost;
 		string pId;
-		//void* pNode;
 		Vertex* pVertex;
 		diHeap->deleteMin(&pId, &pCost, &pVertex);
-		cout<<"Delete: "<<pId<<endl;
 		counter--;
-		//Vertex* pVertex = static_cast<Vertex*> (pNode);
-		cout<<pVertex->id<<endl;
+		if(pVertex->adjacentEdge.empty()){
+			break;
+		}
 		while(! pVertex->adjacentEdge.empty()){
 			string destination = pVertex->adjacentEdge.front().destination;
 			int cost = pVertex->adjacentEdge.front().cost;
-			cout<<"Destination: "<<destination<<endl;
-			int currentCost = (static_cast<Vertex*> (vertexTable->getPointer(destination)))->cost;
-			if((pCost + cost) < 0){
+			Vertex* desVertex = static_cast<Vertex*> (vertexTable->getPointer(destination));
+			if((pCost + cost) < desVertex->cost){
 				diHeap->setKey(destination, cost + pCost);
+				desVertex->cost = cost + pCost;
+				//cout<<"Set "<<destination<<" to "<<cost + pCost<<endl;
 			}
-			//(static_cast<Vertex*> (vertexTable->getPointer(pVertex->adjacentEdge.front().destination)))->cost = pVertex->adjacentEdge.front().cost + pCost;
-			cout<<pVertex->adjacentEdge.front().destination<<endl;
 			pVertex->adjacentEdge.pop_front();
 		}
 	}
+	printResult();
 }

@@ -46,8 +46,12 @@ class graph {
 	// 1 if heap has already be filled to its capacity.                              	
 	// 2 if the node has already exists but the heap hasn't reached to its capacity.
 	int insertHeap(const std::string &id, void* pv);
-
+	
+	//buildHeap - Build a binary heap to operate Dijkstra algorithm.
 	void buildHeap();
+
+	//printResult - Print the Result of Dijkstra algorithm.
+	void printResult();
 	
 	public:
 
