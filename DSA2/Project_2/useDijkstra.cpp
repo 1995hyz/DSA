@@ -7,15 +7,9 @@ using namespace std;
 int main(){
 	int size = 3;
 	graph testGraph = graph(size);
-	if(testGraph.addEdge("v1", "v2", 2)==0){
-		cout<<"Insertion Succeed."<<endl;
-	}
-	if(testGraph.addEdge("v1", "v4", 1)==0){
-		cout<<"Insertion Succeed."<<endl;
-	}
-	if(testGraph.addEdge("v2", "v4", 3)==0){
-		cout<<"Insertion Succeed."<<endl;
-	}
+	testGraph.addEdge("v1", "v2", 2);
+	testGraph.addEdge("v1", "v4", 1);
+	testGraph.addEdge("v2", "v4", 3);
 	testGraph.addEdge("v2", "v5", 10);
 	testGraph.addEdge("v3", "v1", 4);
 	testGraph.addEdge("v3", "v6", 5);
@@ -33,5 +27,5 @@ int main(){
 			(*itr).adjacentEdge.pop_front();
 		}
 	}*/
-	testGraph.searchPath("v5");
+	testGraph.searchPath("v1");
 }

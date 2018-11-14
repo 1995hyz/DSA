@@ -22,6 +22,7 @@ class graph {
 		public:
 		int cost;
 		std::string id;
+		Vertex* path;
 		std::list<Edge> adjacentEdge;
 	};
 	
@@ -52,6 +53,9 @@ class graph {
 
 	//printResult - Print the Result of Dijkstra algorithm.
 	void printResult();
+
+	//returnPath - Return a string that is the path of the two vertices.
+	std::string returnPath(Vertex* v, std::string vertexPath);
 	
 	public:
 

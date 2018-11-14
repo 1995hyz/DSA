@@ -77,6 +77,16 @@ void graph::buildHeap(){
 	}
 }
 
+string graph::returnPath(Vertex* v, string vertexPath){
+	if(v->path != NULL && v->path != v){
+		vertexPath = returnPath(v->path, vertexPath) +"," + v->id;
+	}
+	else{
+		vertexPath = v->id;
+	}
+	return vertexPath;
+}
+
 void graph::printResult(){
 	int max = std::numeric_limits<int>::max();
 	list<Vertex>::iterator ptr;
@@ -86,7 +96,7 @@ void graph::printResult(){
 			cout<<(*ptr).id<<": NO PATH"<<endl;
 		}
 		else{
-			cout<<(*ptr).id<<": "<<(*ptr).cost<<endl;
+			cout<<(*ptr).id<<": "<<(*ptr).cost<<" "<<"[" + returnPath(&(*ptr),"") + "]"<<endl;
 		}
 		ptr++;
 	}	
@@ -95,7 +105,9 @@ void graph::printResult(){
 void graph::searchPath(const string &id){
 	buildHeap();
 	diHeap->setKey(id, 0);
-	static_cast<Vertex*> (vertexTable->getPointer(id))->cost = 0;
+	Vertex* startVertex = static_cast<Vertex*> (vertexTable->getPointer(id));
+	startVertex->cost = 0;
+	startVertex->path = startVertex;
 	int counter = capacity;
 	while(counter > 0){
 		int pCost;
@@ -113,7 +125,7 @@ void graph::searchPath(const string &id){
 			if((pCost + cost) < desVertex->cost){
 				diHeap->setKey(destination, cost + pCost);
 				desVertex->cost = cost + pCost;
-				//cout<<"Set "<<destination<<" to "<<cost + pCost<<endl;
+				desVertex->path = pVertex;
 			}
 			pVertex->adjacentEdge.pop_front();
 		}
