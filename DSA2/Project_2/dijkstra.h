@@ -51,9 +51,6 @@ class graph {
 	//buildHeap - Build a binary heap to operate Dijkstra algorithm.
 	void buildHeap();
 
-	//printResult - Print the Result of Dijkstra algorithm.
-	void printResult();
-
 	//returnPath - Return a string that is the path of the two vertices.
 	std::string returnPath(Vertex* v, std::string vertexPath);
 	
@@ -69,13 +66,9 @@ class graph {
 
 	//searchPath - Search the shortest cost to every vertex, given the provided start vertex.
 	void searchPath(const std::string &id); 
-
-	//Define iterator.
-	typedef std::list<Vertex>::iterator iterator;
-	typedef std::list<Vertex>::const_iterator const_iterator;
-	iterator begin(){return vertices.begin();}
-	iterator end(){return vertices.end();}
-
+	
+	//printResult - Print the Result of Dijkstra algorithm.
+	void printResult();
 };
 
 #endif

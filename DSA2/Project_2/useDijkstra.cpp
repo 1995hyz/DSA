@@ -42,9 +42,19 @@ int generateGraph(string &filename, graph* myGraph){
 int main(){
 	int size = 10;
 	string inputFile;
-	string outputFile;
 	cout<<"Enter name of graph file: ";
 	cin>>inputFile;
+	graph *dijkstraGraph = new graph(size);
+	generateGraph(inputFile, dijkstraGraph);
+	string id;
+	cout<<"Enter a valid vertex id for the starting vertex: ";
+	cin>>id;
+	clock_t t1 = clock();
+	dijkstraGraph->searchPath(id);
+	clock_t t2 = clock();
+	double timeDiff = ((double)(t2 - t1) / CLOCKS_PER_SEC);
+	cout<<"Total time (in seconds) to apply Dijkstra's algorithm: "<<timeDiff<<endl;
+	string outputFile;
 	cout<<"Enter name of output file: ";
 	cin>>outputFile;
 	ofstream output(outputFile.c_str());
@@ -52,19 +62,10 @@ int main(){
 		cerr<<"Error: Cannot open file "<<outputFile<<endl;
 		exit(1);
 	}
-	graph *dikstraGraph = new graph(size);
-	generateGraph(inputFile, dikstraGraph);
-	string id;
-	cout<<"Enter a valid vertex id for the starting vertex: ";
-	cin>>id;
 	streambuf* oldCout = cout.rdbuf();
 	streambuf* newCout = output.rdbuf();
 	cout.rdbuf(newCout);
-	clock_t t1 = clock();
-	dikstraGraph->searchPath(id);
-	clock_t t2 = clock();
+	dijkstraGraph -> printResult();
 	cout.rdbuf(oldCout);
 	output.close();
-	double timeDiff = ((double)(t2 - t1) / CLOCKS_PER_SEC);
-	cout<<"Total time (in seconds) to apply Dijkstra's algorithm: "<<timeDiff<<endl;
 }

@@ -79,7 +79,7 @@ void graph::buildHeap(){
 
 string graph::returnPath(Vertex* v, string vertexPath){
 	if(v->path != NULL && v->path != v){
-		vertexPath = returnPath(v->path, vertexPath) +"," + v->id;
+		vertexPath = returnPath(v->path, vertexPath) +", " + v->id;
 	}
 	else{
 		vertexPath = v->id;
@@ -130,5 +130,4 @@ void graph::searchPath(const string &id){
 			pVertex->adjacentEdge.pop_front();
 		}
 	}
-	printResult();
 }
