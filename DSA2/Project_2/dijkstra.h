@@ -9,7 +9,7 @@
 
 class graph {
 
-	public:
+	private:
 	
 	class Edge {
 		public:
