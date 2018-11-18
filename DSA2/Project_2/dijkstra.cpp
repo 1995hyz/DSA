@@ -102,9 +102,11 @@ void graph::printResult(){
 	}	
 }
 
-void graph::searchPath(const string &id){
+int graph::searchPath(const string &id){
 	buildHeap();
-	diHeap->setKey(id, 0);
+	if (diHeap->setKey(id, 0)){
+		return 1;
+	}
 	Vertex* startVertex = static_cast<Vertex*> (vertexTable->getPointer(id));
 	startVertex->cost = 0;
 	startVertex->path = startVertex;
@@ -130,4 +132,5 @@ void graph::searchPath(const string &id){
 			pVertex->adjacentEdge.pop_front();
 		}
 	}
+	return 0;
 }

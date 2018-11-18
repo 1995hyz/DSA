@@ -65,7 +65,9 @@ class graph {
 	int addEdge(const std::string &id, const std::string &edge, int cost);
 
 	//searchPath - Search the shortest cost to every vertex, given the provided start vertex.
-	void searchPath(const std::string &id); 
+	//0 on success.
+	//1 on the vertex id doesn't exist.
+	int searchPath(const std::string &id); 
 	
 	//printResult - Print the Result of Dijkstra algorithm.
 	void printResult();

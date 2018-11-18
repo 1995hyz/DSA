@@ -46,11 +46,20 @@ int main(){
 	cin>>inputFile;
 	graph *dijkstraGraph = new graph(size);
 	generateGraph(inputFile, dijkstraGraph);
-	string id;
-	cout<<"Enter a valid vertex id for the starting vertex: ";
-	cin>>id;
-	clock_t t1 = clock();
-	dijkstraGraph->searchPath(id);
+	clock_t t1;
+	while(true){
+		string id;
+		cout<<"Enter a valid vertex id for the starting vertex: ";
+		cin>>id;
+		t1 = clock();
+		if(dijkstraGraph->searchPath(id)){
+			cout<<"The vertex id doesn't exist."<<endl;
+			continue;
+		}
+		else{
+			break;
+		}
+	}
 	clock_t t2 = clock();
 	double timeDiff = ((double)(t2 - t1) / CLOCKS_PER_SEC);
 	cout<<"Total time (in seconds) to apply Dijkstra's algorithm: "<<timeDiff<<endl;
