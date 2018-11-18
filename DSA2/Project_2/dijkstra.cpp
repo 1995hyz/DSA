@@ -65,7 +65,7 @@ int graph::insertHeap(const string &id, void* pv){
 
 void graph::buildHeap(){
 	diHeap = new heap(capacity);
-	int max = std::numeric_limits<int>::max();
+	int max = numeric_limits<int>::max();
 	list<Vertex>::iterator ptr;
 	ptr = vertices.begin();
 	while(ptr != vertices.end()){
@@ -88,7 +88,7 @@ string graph::returnPath(Vertex* v, string vertexPath){
 }
 
 void graph::printResult(){
-	int max = std::numeric_limits<int>::max();
+	int max = numeric_limits<int>::max();
 	list<Vertex>::iterator ptr;
 	ptr = vertices.begin();
 	while(ptr != vertices.end()){
@@ -115,7 +115,7 @@ void graph::searchPath(const string &id){
 		Vertex* pVertex;
 		diHeap->deleteMin(&pId, &pCost, &pVertex);
 		counter--;
-		if(pVertex->adjacentEdge.empty()){
+		if (pCost == numeric_limits<int>::max()){
 			break;
 		}
 		while(! pVertex->adjacentEdge.empty()){
