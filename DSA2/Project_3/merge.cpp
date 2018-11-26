@@ -1,29 +1,44 @@
 #include <iostream>
 #include <string>
+#include <algorithm>
 
 using namespace std;
 
 int main(){
-	string A = "QNZ";
-	string B = "BZZI";
-	string C = "QZNBZZI";
-
-	string rest = "";
-	int last_pos = -1;
-	int m = 0;
-	for(int i=0; i<A.length(); i++){
-		for(int j=m; j<C.length(); j++){
-			if (C[j] == A[i]){
-				cout<<C[j]<<" == "<<A[i]<<endl;
-				rest = rest + C.substr(last_pos+1, j-(last_pos+1));
-				m = j + 1;
-				last_pos = j;
-				break;
-			}
+	string A, B, C;
+	A = "bcd";
+	B = "ace";
+	C = "bcadce";
+	string subA, subB, subC;
+	subA = A;
+	subB = B;
+	subC = C;
+	int charLength = 1;
+	string result = "";
+	while(subC.length()){
+		string CComp = subC.substr(0, charLength);
+		string AComp = subA.substr(0, charLength);
+		string BComp = subB.substr(0, charLength);
+		if((CComp == AComp) && (CComp == BComp)){
+			charLength++;
+			continue;
 		}
-	}
-	rest = rest + C.substr(last_pos+1, C.length()-last_pos-1);
-	cout<<"B: "<<B<<endl;
-	cout<<"Rest: "<<rest<<endl;
+		if(CComp == AComp){
+			string upperCase = CComp;
+			transform(upperCase.begin(), upperCase.end(), upperCase.begin(), ::toupper);
+			result = result.append(upperCase);
+			subA = subA.substr(charLength, subA.length()-charLength);
+		}
+		else if(CComp == BComp){
+			result += CComp;
+			subB = subB.substr(charLength, subB.length()-charLength);
+		}
+		else{
+			cout<<"Not a Merge."<<endl;
+			break;
+		}
+		subC = subC.substr(charLength, subC.length()-charLength);
+	}	
+	cout<<result<<endl;
 	return 0;
 }
