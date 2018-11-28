@@ -1,44 +1,52 @@
 #include <iostream>
 #include <string>
-#include <algorithm>
 
 using namespace std;
 
-int main(){
-	string A, B, C;
-	A = "bcd";
-	B = "ace";
-	C = "bcadce";
-	string subA, subB, subC;
-	subA = A;
-	subB = B;
-	subC = C;
-	int charLength = 1;
-	string result = "";
-	while(subC.length()){
-		string CComp = subC.substr(0, charLength);
-		string AComp = subA.substr(0, charLength);
-		string BComp = subB.substr(0, charLength);
-		if((CComp == AComp) && (CComp == BComp)){
-			charLength++;
-			continue;
+int matrix[1001][1001];
+
+int findPath(const string & rowString, const string & columnString, const string & mergeString, int rowNum, int columnNum){
+	int mergeLength = mergeString.length();
+	for(int i = 0; i<mergeLength; i++){
+		if((matrix[rowNum+1][columnNum] == 0) && (matrix[rowNum][columnNum+1] == 0) && (rowString[rowNum+1] == mergeString[i]) && (columnString[columnNum+1] == mergeString[i])){
+			matrix[rowNum][columnNum+1] = 2;
+			string newRow = rowString.substr(columnNum+2, rowString.length()-columnNum-2);
+			string newColumn = columnString.substr(rowNum, columnString.length()-rowNum);
+			int result = findPath(newRow, newColumn, rowNum, columnNum+2);
+			if(! result){
+				break;
+			}
+			else{
+				matrix[rowNum+1][columnNum] = 1;
+				newRow = rowString.substr(columnNum, rowString.length()-columnNum);
+				newColumn = columnString.substr(rowNum+2, columnString.length-rowNum-2);
+				result = findPath(newRow, newColumn, rowNum+2, columnNum);
+				if(! result){
+					break;
+				}
+				else{
+					return 1
+				}
+			}
 		}
-		if(CComp == AComp){
-			string upperCase = CComp;
-			transform(upperCase.begin(), upperCase.end(), upperCase.begin(), ::toupper);
-			result = result.append(upperCase);
-			subA = subA.substr(charLength, subA.length()-charLength);
+		else if((matrix[rowNum+1][columnNum] == 0) && (rowString[rowNum+1] == mergeString[i])){
+			rowNum++;
+			matrix[rowNum][columnNum] = 1;
 		}
-		else if(CComp == BComp){
-			result += CComp;
-			subB = subB.substr(charLength, subB.length()-charLength);
+		else if((matrix[rowNum][columnNum+1] == 0) && (columnString[columnNum+1] == mergeString[i])){
+			columnNum++;
+			matrix[rowNum][columnNum] = 2;
 		}
 		else{
-			cout<<"Not a Merge."<<endl;
-			break;
+			return 1;
 		}
-		subC = subC.substr(charLength, subC.length()-charLength);
-	}	
-	cout<<result<<endl;
+	}
+	return 0;
+}
+
+int main(){
+	string A = "abc";
+	string B = "efg";
+	matrix[0][0] = 0;
 	return 0;
 }
