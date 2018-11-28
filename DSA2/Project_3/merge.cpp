@@ -12,7 +12,7 @@ string findPath(const string & rowString, const string & columnString, const str
 	int columnLength = columnString.length();
 	string resultString = "";
 	for(int i = 0; i<mergeLength; i++){
-		if((columnNum+1 <= rowLength) && (rowNum+1 <= columnLength) && (matrix[rowNum+1][columnNum] == 0) && (matrix[rowNum][columnNum+1] == 0) && (rowString[rowNum] == mergeString[i]) && (columnString[columnNum] == mergeString[i])){
+		if((columnNum+1 <= rowLength) && (rowNum+1 <= columnLength) && (matrix[rowNum+1][columnNum] == 0) && (matrix[rowNum][columnNum+1] == 0) && (rowString[columnNum] == mergeString[i]) && (columnString[rowNum] == mergeString[i])){
 			matrix[rowNum][columnNum+1] = 1;
 			string newMerge = mergeString.substr(i+1, mergeLength-i-1);
 			string partialResult = findPath(rowString, columnString, newMerge, rowNum, columnNum+1);
@@ -65,9 +65,6 @@ void clearMatrix(int rowNum, int columnNum){
 }
 
 int main(){
-	/*string A = "abc";
-	string B = "ebg";
-	string C = "aebbcg";*/
 	string inputFile;
 	string outputFile;
 	cout<<"Enter name of input file: ";
@@ -84,7 +81,6 @@ int main(){
 		cerr<<"Error: Couldn't open output file, "<<outputFile<<endl;
 		return 1;
 	}
-	//matrix[0][0] = 3;
 	string A;
 	string B;
 	string C;
@@ -92,9 +88,14 @@ int main(){
 		getline(input, B);
 		getline(input, C);
 		string path = findPath(A, B, C, 0, 0);
-		//printMatrix(4, 4);
-		cout<<path<<endl;
+		if(path.empty()){
+			output<<"*** NOT A MERGE ***"<<endl;
+		}
+		else{
+			output<<path<<endl;
+		}
 		clearMatrix(A.length()+1, B.length()+1);
 	}
+	cout<<"Merge Finished. Have a good day."<<endl;
 	return 0;
 }
