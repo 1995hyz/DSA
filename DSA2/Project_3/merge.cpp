@@ -4,14 +4,22 @@
 
 using namespace std;
 
+
+//matrix - This int matrix is used to dynamically record merge checking result. String A is located horizontally
+//and string B is located vertically.
 int matrix[1001][1001];
 
+
+//findPath - Check if a string C is the merge of the two strings A and B. String A has the priority to be allocated 
+//before B if more than one possible merge exist.
+//The function returns the merged string in a checked form. It returns empty string if C is not a merge of A and B.
 string findPath(const string & rowString, const string & columnString, const string & mergeString, int rowNum, int columnNum){
 	int mergeLength = mergeString.length();
 	int rowLength = rowString.length();
 	int columnLength = columnString.length();
 	string resultString = "";
 	for(int i = 0; i<mergeLength; i++){
+		//Branch out if A and B has the same character.
 		if((columnNum+1 <= rowLength) && (rowNum+1 <= columnLength) && (matrix[rowNum+1][columnNum] == 0) && (matrix[rowNum][columnNum+1] == 0) && (rowString[columnNum] == mergeString[i]) && (columnString[rowNum] == mergeString[i])){
 			matrix[rowNum][columnNum+1] = 1;
 			string newMerge = mergeString.substr(i+1, mergeLength-i-1);
@@ -45,15 +53,6 @@ string findPath(const string & rowString, const string & columnString, const str
 		}
 	}
 	return resultString;
-}
-
-void printMatrix(int rowNum, int columnNum){
-	for(int i=0; i<rowNum; i++){
-		for(int j=0; j<columnNum; j++){
-			cout<<matrix[i][j]<<" ";
-		}
-		cout<<endl;
-	}
 }
 
 void clearMatrix(int rowNum, int columnNum){
