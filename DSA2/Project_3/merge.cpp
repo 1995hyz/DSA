@@ -9,7 +9,6 @@ using namespace std;
 //and string B is located vertically.
 int matrix[1001][1001];
 
-
 //findPath - Check if a string C is the merge of the two strings A and B. String A has the priority to be allocated 
 //before B if more than one possible merge exist.
 //The function returns the merged string in a checked form. It returns empty string if C is not a merge of A and B.
@@ -63,6 +62,7 @@ void clearMatrix(int rowNum, int columnNum){
 	}
 }
 
+
 int main(){
 	string inputFile;
 	string outputFile;
@@ -86,6 +86,10 @@ int main(){
 	while(getline(input, A)){
 		getline(input, B);
 		getline(input, C);
+		if(C.length() != B.length() + A.length()){
+			output<<"*** NOT A MERGE ***"<<endl;
+			continue;
+		}
 		string path = findPath(A, B, C, 0, 0);
 		if(path.empty()){
 			output<<"*** NOT A MERGE ***"<<endl;
@@ -93,7 +97,7 @@ int main(){
 		else{
 			output<<path<<endl;
 		}
-		clearMatrix(A.length()+1, B.length()+1);
+		clearMatrix(B.length()+1, A.length()+1);
 	}
 	cout<<"Merge Finished. Have a good day."<<endl;
 	return 0;
